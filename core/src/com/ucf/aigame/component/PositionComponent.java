@@ -5,8 +5,8 @@ package com.ucf.aigame.component;
  */
 public class PositionComponent extends Component
 {
-    public int width;
-    public int height;
+    public float width;
+    public float height;
 
     public float xPosition;
     public float yPosition;

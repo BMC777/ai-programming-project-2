@@ -5,8 +5,8 @@ import com.badlogic.gdx.Screen;
 
 public class GameMain extends Game
 {
-	public static final int GAME_WIDTH = 1024;
-	public static final int GAME_HEIGHT = 1024;
+	public static final int GAME_WIDTH = 1536;
+	public static final int GAME_HEIGHT = 768;
 	public static final int TILE_DIMENSIONS = 32;			//The game is tile-based with 32bit tile dimensions
 	public static final int TILE_CENTER_OFFSET = 16;		//Offset used for center of entity calculations
 

@@ -1,9 +1,7 @@
 package com.ucf.aigame;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.ucf.aigame.enginesystem.GameWorld;
-import com.ucf.aigame.enginesystem.InputSystem;
 import com.ucf.aigame.enginesystem.MovementSystem;
 import com.ucf.aigame.enginesystem.RenderSystem;
 
@@ -14,7 +12,6 @@ public class GameScreen implements Screen
 {
     private GameWorld gameWorld;
 
-    private final InputSystem inputSystem;
     private final MovementSystem movementSystem;
     private final RenderSystem renderSystem;
 
@@ -27,7 +24,6 @@ public class GameScreen implements Screen
     {
         gameWorld = new GameWorld();
 
-        inputSystem = new InputSystem( gameWorld );
         movementSystem = new MovementSystem( gameWorld );
         renderSystem = new RenderSystem( gameWorld );
     }

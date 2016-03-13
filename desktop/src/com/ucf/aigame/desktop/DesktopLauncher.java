@@ -9,8 +9,8 @@ public class DesktopLauncher {
 	{
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Assignment2";
-		config.width = 1024;
-		config.height = 1024;
+		config.width = 1536;
+		config.height = 768;
 		new LwjglApplication(new GameMain(), config);
 	}
 }

@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ucf.aigame.GameMain;
-import com.ucf.aigame.GameScreen;
-import com.ucf.aigame.component.PlayerSpriteComponent;
+import com.ucf.aigame.component.FloorTextureComponent;
+import com.ucf.aigame.component.PlayerTextureComponent;
+import com.ucf.aigame.component.WallTextureComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,9 @@ public class RenderSystem implements EngineSystem
     private SpriteBatch batcher;
     private OrthographicCamera camera;
 
-    private List<PlayerSpriteComponent> playerSpriteComponentList;
+    private List<FloorTextureComponent> floorTextureComponentList;
+    private List<WallTextureComponent> wallTextureComponentList;
+    private List<PlayerTextureComponent> playerTextureComponentList;
 
     public RenderSystem(GameWorld gameWorld)
     {
@@ -38,16 +40,29 @@ public class RenderSystem implements EngineSystem
     @Override
     public void updateSystem(double timeDelta)
     {
-        playerSpriteComponentList = new ArrayList<PlayerSpriteComponent>(gameWorld.entityManager.getComponentsOfType(PlayerSpriteComponent.class));
+        floorTextureComponentList = gameWorld.entityManager.getComponentsOfType(FloorTextureComponent.class);
+        wallTextureComponentList = gameWorld.entityManager.getComponentsOfType(WallTextureComponent.class);
+        playerTextureComponentList = gameWorld.entityManager.getComponentsOfType(PlayerTextureComponent.class);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);    //RGB and Alpha values are used when OpenGL pixel color buffers are cleared.
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);   //Clears the pixel color buffers for future color writing.
 
         batcher.begin();
 
-        for ( PlayerSpriteComponent playerSpriteComponent : playerSpriteComponentList)
+        //Rendering all textures in layer order.
+        for ( FloorTextureComponent floorTextureComponent : floorTextureComponentList )
         {
-            batcher.draw(playerSpriteComponent.sprite, playerSpriteComponent.xPosition, playerSpriteComponent.yPosition, playerSpriteComponent.width, playerSpriteComponent.height);
+            batcher.draw( floorTextureComponent.floorTexture, floorTextureComponent.xPosition, floorTextureComponent.yPosition);
+        }
+
+        for ( WallTextureComponent wallTextureComponent : wallTextureComponentList )
+        {
+            batcher.draw( wallTextureComponent.wallTexture, wallTextureComponent.xPosition, wallTextureComponent.yPosition);
+        }
+
+        for ( PlayerTextureComponent playerTextureComponent : playerTextureComponentList )
+        {
+            batcher.draw( playerTextureComponent.playerTexture, playerTextureComponent.xPosition, playerTextureComponent.yPosition);
         }
 
         batcher.end();
