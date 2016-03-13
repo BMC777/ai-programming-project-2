@@ -22,6 +22,7 @@ public class GameMain extends Game
 	{
 		//Renders the Screens
 		super.render();
+		super.dispose();
 	}
 
 	@Override

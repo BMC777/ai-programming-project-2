@@ -18,92 +18,109 @@ import java.util.*;
  * TODO: Create an Aspects class and change all Class<A> objects to Aspect objects.
  * TODO: Possibly create a ComponentManager class to further separate Entities and Components.
  */
-public class EntityManager
+public final class EntityManager
 {
-    private int baseUnassignedEntityID = 1;
 
-    List<Integer> globalEntityList;
-    HashMap<Class<?>, HashMap<Integer, ? extends Component>> AspectMap;
+    private static int nextEntityID = 1;
+
+    List<Integer> globalEntityIDList;
+    List<Integer> freeEntityIDList;
+    HashMap<Class<?>, HashMap<Integer, ? extends Component>> componentTypeMap;
 
     public EntityManager()
     {
-        globalEntityList = new LinkedList<Integer>();
-        AspectMap = new HashMap<Class<?>, HashMap<Integer, ? extends Component>>();
+        globalEntityIDList = new LinkedList<Integer>();
+        freeEntityIDList = new LinkedList<Integer>();
+
+        componentTypeMap = new HashMap<Class<?>, HashMap<Integer, ? extends Component>>();
     }
 
     public int createEntity()
     {
         int nextEntityID = generateNextEntityID();
-        globalEntityList.add(nextEntityID);
+
+        globalEntityIDList.add(nextEntityID);
 
         return nextEntityID;
     }
 
-    public <A extends Component> void addComponent( int entity, A newComponent )
+    public void destroyEntity( Integer entity )
     {
-        //Check to see if the newComponent's Aspect already exists within AspectMap.
-        HashMap<Integer, ? extends Component> tempAspect = AspectMap.get( newComponent.getClass() );
+        globalEntityIDList.remove(entity);
 
-        //If an Aspect does not exist for the newComponent, create a new Aspect ID and store a null.
-        if ( tempAspect == null)
+        for ( HashMap<Integer, ? extends Component> entityMap : componentTypeMap.values() )
         {
-            tempAspect = new HashMap<Integer, A>();
-            AspectMap.put( newComponent.getClass(), tempAspect );
+            entityMap.remove(entity);
         }
-
-        //
-        ((HashMap<Integer, A>)tempAspect).put(entity, newComponent);
     }
 
-    public <A extends Component> A getComponent( int entityID, Class<A> componentAspect )
+    public <T extends Component> void addComponent( int entity, T newComponent )
     {
-        //Get the map of Components with Aspect componentAspect
-        HashMap<Integer, ? extends Component> componentMap = AspectMap.get( componentAspect );
+        //Get the map containing the entities with type T components
+        HashMap<Integer, ? extends Component> entityMap = componentTypeMap.get( newComponent.getClass() );
 
-        //Get the entity's component, and cast it to the correct Aspect
-        A foundComponent = componentAspect.cast(componentMap.get(entityID));
+        //If no such map already exists, create a new map.
+        if ( entityMap == null )
+        {
+            entityMap = new HashMap<Integer, T>();
+            componentTypeMap.put( newComponent.getClass(), entityMap );
+        }
+
+        //Cast the map's Component values to the specific componentType, then map the new Component to the given Entity.
+        ((HashMap<Integer, T>)entityMap).put(entity, newComponent);
+    }
+
+    public <T extends Component> T getComponent( int entityID, Class<T> componentType )
+    {
+        //Get the map containing the entities with components of Type T.
+        HashMap<Integer, ? extends Component> entityMap = componentTypeMap.get( componentType );
+
+        //Get the component, and cast it to it's specific type.
+        T foundComponent = componentType.cast(entityMap.get(entityID));
 
         return foundComponent;
     }
 
-    public <A extends Component> Set<Integer> getEntitiesWithAspect( Class<A> componentAspect )
+    //Return Set because no Entity will be a duplicate.
+    public <T extends Component> Set<Integer> getEntitiesWithComponentsOfType( Class<T> componentType )
     {
-        HashMap<Integer, ? extends Component> tempAspect = AspectMap.get( componentAspect );
+        //Get the map containing the entities with type T components
+        HashMap<Integer, ? extends Component> entityMap = componentTypeMap.get( componentType );
 
-        if ( tempAspect == null )
+        //If no such map already exists, return an empty map.
+        if ( entityMap == null )
         {
-            return new HashSet<Integer>();  //Small data set, easy to see that it contains null values.
+            return new HashSet<Integer>();
         }
 
-        return tempAspect.keySet();
+        return entityMap.keySet();
     }
 
-    public void destroyEntity( int entityToDestroy )
+    public <T extends Component> List<T> getComponentsOfType( Class<T> componentType )
     {
-        globalEntityList.remove(entityToDestroy);
-    }
+        //Get the map containing the entities with type T components
+        HashMap<Integer, ? extends Component> entityMap = componentTypeMap.get( componentType );
 
-    //Messy, re-do later. (Maybe create an Aspect class)
-    public <A extends Component> List<A> getComponentsWithAspect( Class<A> componentAspect )
-    {
-        HashMap<Integer, ? extends Component> componentMap = AspectMap.get( componentAspect );
-
-        if ( componentMap == null )
+        //If no such map already exists, return an empty LinkedList.
+        if ( entityMap == null )
         {
-            //Worst-Case insertion using Linked List is fast so initialize a new Aspect as a Linked List
-            return new LinkedList<A>();
+            return new LinkedList<T>();
         }
         else
         {
-            //Worst-Case access of an ArrayList is fast so initialize a Aspect ArrayList via a Collection of components
-            List<A> componentList = new ArrayList<A>((java.util.Collection<A>)componentMap.values());
+            //Create an ArrayList from the found Components and return the new ArrayList.
+            List<T> componentList = new ArrayList<T>((java.util.Collection<T>)entityMap.values());
             return componentList;
         }
     }
 
     private int generateNextEntityID()
     {
+        if (!freeEntityIDList.isEmpty())
+        {
+            Integer newID = freeEntityIDList.remove(0);
+        }
         //Possibly needs synchronization to prevent creation of same ID at the same time.
-        return baseUnassignedEntityID++;
+        return nextEntityID++;
     }
 }

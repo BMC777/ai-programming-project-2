@@ -1,8 +1,10 @@
 package com.ucf.aigame.enginesystem;
 
 import com.ucf.aigame.EntityManager;
-import com.ucf.aigame.component.Position;
-import com.ucf.aigame.component.Sprite;
+
+import com.ucf.aigame.component.InputComponent;
+import com.ucf.aigame.component.PlayerSpriteComponent;
+import com.ucf.aigame.component.PositionComponent;
 
 /**
  * Created by Bryan on 2/13/2016.
@@ -10,7 +12,6 @@ import com.ucf.aigame.component.Sprite;
 public class GameWorld
 {
     protected final EntityManager entityManager;
-    //private final ComponentManager componentManager;
 
     public GameWorld()
     {
@@ -23,16 +24,14 @@ public class GameWorld
     {
         int playerEntityID =  entityManager.createEntity();
 
-        Sprite playerSpriteComponent = new Sprite();
-        Position playerPositionComponent = new Position();
+        entityManager.addComponent(playerEntityID, new PlayerSpriteComponent());
+        entityManager.addComponent(playerEntityID, new PositionComponent());
+        entityManager.addComponent(playerEntityID, new InputComponent());
+    }
 
-        playerPositionComponent.width = 32;
-        playerPositionComponent.height = 32;
+    private void createGameMap()
+    {
 
-        System.out.println(playerPositionComponent.width);
-
-        entityManager.addComponent(playerEntityID, playerSpriteComponent);
-        entityManager.addComponent(playerEntityID, playerPositionComponent);
     }
 
 }

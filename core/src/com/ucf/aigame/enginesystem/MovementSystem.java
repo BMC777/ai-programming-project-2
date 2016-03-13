@@ -1,9 +1,8 @@
 package com.ucf.aigame.enginesystem;
 
-import com.ucf.aigame.component.Component;
-import com.ucf.aigame.component.Position;
+import com.ucf.aigame.component.PositionComponent;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -13,9 +12,9 @@ import java.util.ListIterator;
 public class MovementSystem implements EngineSystem
 {
     private GameWorld gameWorld;
-    private List<Position> positionComponentList;
-    private ListIterator<Position> positionComponentIterator;
-    private Position nextPositionComponent;
+    private List<PositionComponent> positionComponentList;
+    private ListIterator<PositionComponent> positionComponentIterator;
+    private PositionComponent nextPositionComponent;
 
     public MovementSystem(GameWorld gameWorld )
     {
@@ -25,15 +24,6 @@ public class MovementSystem implements EngineSystem
     @Override
     public void updateSystem(double timeDelta)
     {
-        positionComponentList = new LinkedList<Position>(gameWorld.entityManager.getComponentsWithAspect(Position.class));
-        positionComponentIterator = positionComponentList.listIterator();
-
-        while (positionComponentIterator.hasNext())
-        {
-            nextPositionComponent = positionComponentIterator.next();
-            nextPositionComponent.height = 81;
-
-            System.out.println(nextPositionComponent.height);
-        }
+        positionComponentList = new ArrayList<PositionComponent>(gameWorld.entityManager.getComponentsOfType(PositionComponent.class));
     }
 }
