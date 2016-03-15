@@ -14,10 +14,6 @@ import java.util.*;
  * @since 0.1.0
  */
 
-/**
- * TODO: Create an Aspects class and change all Class<A> objects to Aspect objects.
- * TODO: Possibly create a ComponentManager class to further separate Entities and Components.
- */
 public final class EntityManager
 {
 
@@ -34,6 +30,8 @@ public final class EntityManager
 
         componentTypeMap = new HashMap<Class<?>, HashMap<Integer, ? extends Component>>();
     }
+
+
 
     public int createEntity()
     {

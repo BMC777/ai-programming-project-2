@@ -26,29 +26,29 @@ public class GameWorld
     {
         for ( int x = 0; x < GameMain.GAME_WIDTH; x += GameMain.TILE_DIMENSIONS )
         {
-            for ( int y = 0; y < GameMain.GAME_HEIGHT; y += GameMain.TILE_DIMENSIONS)
+            for ( int y = 0; y < GameMain.GAME_HEIGHT; y += GameMain.TILE_DIMENSIONS )
             {
                 //Fill map with floor tiles.
                 int floorEntityID = entityManager.createEntity();
+
                 FloorTextureComponent floorTextureComponent = new FloorTextureComponent();
 
-                floorTextureComponent.xPosition = x;
-                floorTextureComponent.yPosition = y;
-
-                System.out.println("Coordinate: (" + x + ", " + y + ")");
+                floorTextureComponent.floorPosition.setPoint( x, y );
 
                 entityManager.addComponent(floorEntityID, floorTextureComponent);
 
+
                 //Border the map with walls
-                if (x == 0 || x == GameMain.GAME_WIDTH - GameMain.TILE_DIMENSIONS || y == 0 || y == GameMain.GAME_HEIGHT - GameMain.TILE_DIMENSIONS)
+                if ( x == 0 || x == GameMain.GAME_WIDTH - GameMain.TILE_DIMENSIONS || y == 0 || y == GameMain.GAME_HEIGHT - GameMain.TILE_DIMENSIONS )
                 {
                     int wallEntityID = entityManager.createEntity();
+
                     WallTextureComponent wallTextureComponent = new WallTextureComponent();
 
-                    wallTextureComponent.xPosition = x;
-                    wallTextureComponent.yPosition = y;
+                    wallTextureComponent.wallPosition.setPoint( x, y );
 
-                    entityManager.addComponent(wallEntityID, wallTextureComponent);
+                    entityManager.addComponent( wallEntityID, wallTextureComponent );
+
                 }
             }
         }
@@ -60,6 +60,5 @@ public class GameWorld
         PlayerTextureComponent playerTextureComponent;
 
         entityManager.addComponent(playerEntityID, new PlayerTextureComponent());
-        entityManager.addComponent(playerEntityID, new PositionComponent());
     }
 }

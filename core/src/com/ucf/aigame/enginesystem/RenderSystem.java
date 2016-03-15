@@ -5,10 +5,9 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ucf.aigame.GameMain;
-import com.ucf.aigame.component.FloorTextureComponent;
-import com.ucf.aigame.component.PlayerTextureComponent;
-import com.ucf.aigame.component.WallTextureComponent;
+import com.ucf.aigame.component.*;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,17 +51,17 @@ public class RenderSystem implements EngineSystem
         //Rendering all textures in layer order.
         for ( FloorTextureComponent floorTextureComponent : floorTextureComponentList )
         {
-            batcher.draw( floorTextureComponent.floorTexture, floorTextureComponent.xPosition, floorTextureComponent.yPosition);
+            batcher.draw( floorTextureComponent.floorTexture, floorTextureComponent.floorPosition.getX(), floorTextureComponent.floorPosition.getY());
         }
 
         for ( WallTextureComponent wallTextureComponent : wallTextureComponentList )
         {
-            batcher.draw( wallTextureComponent.wallTexture, wallTextureComponent.xPosition, wallTextureComponent.yPosition);
+            batcher.draw( wallTextureComponent.wallTexture, wallTextureComponent.wallPosition.getX(), wallTextureComponent.wallPosition.getY());
         }
 
         for ( PlayerTextureComponent playerTextureComponent : playerTextureComponentList )
         {
-            batcher.draw( playerTextureComponent.playerTexture, playerTextureComponent.xPosition, playerTextureComponent.yPosition);
+            batcher.draw( playerTextureComponent.playerTexture, playerTextureComponent.playerPosition.getX(), playerTextureComponent.playerPosition.getY());
         }
 
         batcher.end();
